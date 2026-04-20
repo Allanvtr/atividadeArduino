@@ -1,6 +1,6 @@
 
-#define PINO_RX 13
-#define PINO_TX 13
+#define PINO_RTS 13
+#define PINO_CTS 12
 #define PINO_DADOS 10
 #define PINO_CLOCK 9
 #define BAUD_RATE 1
