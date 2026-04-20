@@ -4,7 +4,6 @@
 #define PINO_DADOS 10
 #define PINO_CLOCK 9
 #define BAUD_RATE 1
-#define HALF_BAUD 1000/(2*BAUD_RATE)
 
 #include "Temporizador.h"
 
