@@ -1,4 +1,3 @@
-
 #define PINO_RTS 13
 #define PINO_CTS 12
 #define PINO_DADOS 10
@@ -46,22 +45,37 @@ ISR(TIMER1_COMPA_vect){
   }
 }
 
-// Executada uma vez quando o Arduino reseta
 void setup(){
-  //desabilita interrupcoes
   noInterrupts();
-  // Configura porta serial (Serial Monitor - Ctrl + Shift + M)
-  Serial.begin(9600);
+  Serial.begin(9600); // setting up serial monitor (Serial Monitor - Ctrl + Shift + M)
 
-  // Inicializa TX ou RX
-  //>>>> Codigo Aqui <<<<
-  // Configura timer
-  //>>>> Codigo Aqui <<<<
-  // habilita interrupcoes
-  interrupts();
+  //Inicializating pins (TX or RX)
+  pinMode(PINO_RTS, INPUT);   //Reading RTS
+  pinMode(PINO_CTS, OUTPUT);  //Sending CTS
+  pinMode(PINO_DADOS, INPUT); //Reading data bits
+  pinMode(PINO_CLOCK, INPUT); // Reading clock
+
+  digitalWrite(PINO_CTS, LOW); 
+
+  configuraTemporizador(BAUD_RATE); //timer
+
+  interrupts(); //enabling interrupts
 }
 
-// O loop() eh executado continuamente (como um while(true))
-void loop ( ) {
-  //>>>> Codigo Aqui <<<<
+void loop() {
+  //RTS == HIGH, but we did'nt start receiving yet (CTS == LOW)
+  if (digitalRead(PINO_RTS) == HIGH && digitalRead(PINO_CTS) == LOW) {
+    recebendo = true;
+    contadorBit = 0;
+    digito = 0;
+    
+    digitalWrite(PINO_CTS, HIGH); //telling the emissor that we are ready
+    iniciaTemporizador();
+  }
+
+  //RTS == LOW, but we are receiving (CTS == HIGH)
+  if (digitalRead(PINO_RTS) == LOW && digitalRead(PINO_CTS) == HIGH) {
+    paraTemporizador();
+    digitalWrite(PINO_CTS, LOW);
+  }
 }
